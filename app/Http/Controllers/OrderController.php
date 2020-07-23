@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Order;
 
-class ProductController extends Controller
+class OrderController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -17,8 +17,9 @@ class ProductController extends Controller
     }
 
     public function index() {
-    	return Product::all()->each(function(Product $product){
-    		$product->setHidden($product->getHidden() + ['price1', 'price2', 'price3']);
-		});
+    	return Order::query()
+			->where('user_id', auth()->id())
+			->with('products')
+			->get();
 	}
 }

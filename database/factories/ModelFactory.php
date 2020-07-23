@@ -30,6 +30,7 @@ $factory->define(\App\Models\Product::class, function (Faker $faker) {
 	$price = $faker->randomFloat(2, 10, 50);
 	return [
 		'name' => "pizza " . $faker->word,
+		'image' => $faker->imageUrl(250, 160, 'food'),
 		'description' => $faker->sentence,
 		'price1' => $price,
 		'price2' => round($price * 1.5, 2),

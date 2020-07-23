@@ -21,6 +21,19 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	});
 
 	$router->get('/products', 'ProductController@index');
+
+	$router->group(['middleware' => 'jwt.auth'], function() use ($router) {
+		$router->get('/orders', 'OrderController@index');
+	});
+
+
+
+	$router->post(
+		'auth/login',
+		[
+			'uses' => 'AuthController@authenticate'
+		]
+	);
 });
 
 
