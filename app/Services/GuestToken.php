@@ -26,7 +26,7 @@ class GuestToken
 	{
 		$payload = [
 			'iss' => "guest",
-			'sub' => empty($sub) ? sha1($this->request->getClientIp()) : $sub,
+			'sub' => empty($sub) ? sha1($this->request->getClientIp() . time() . rand(1000000, 9999999)) : $sub,
 			'iat' => time(),
 			'exp' => time() + 60 * 60
 		];
@@ -47,6 +47,7 @@ class GuestToken
 	{
 		try {
 			$this->fetch();
+
 			return $this->request->header($this->header);
 		} catch (\Throwable $e) {
 			$token = $this->generate();
