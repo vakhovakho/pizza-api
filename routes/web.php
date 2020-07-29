@@ -28,12 +28,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
 
 
-	$router->post(
-		'auth/login',
-		[
-			'uses' => 'AuthController@authenticate'
-		]
-	);
+	$router->post('auth/register', 'AuthController@register');
+	$router->post('auth/login', 'AuthController@authenticate');
 });
 
 
