@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Services\AccessToken;
 use App\User;
 use Exception;
 use Firebase\JWT\JWT;
@@ -17,12 +18,12 @@ class JwtGuard implements Guard
 
 	protected $credentials = null;
 
-	protected $request;
+	protected $accessToken;
 
-	public function __construct(UserProvider $provider, Request $request)
+	public function __construct(UserProvider $provider, AccessToken $accessToken)
 	{
 		$this->setProvider($provider);
-		$this->request = $request;
+		$this->accessToken = $accessToken;
 	}
 
 	public function jwt()
@@ -31,36 +32,21 @@ class JwtGuard implements Guard
 			return $this->credentials;
 		}
 
-		$credentials = JWT::decode($this->getTokenForRequest(), env('JWT_SECRET'), ['HS256']);
-
-		return $this->credentials = $credentials;
+		return $this->credentials = $this->accessToken->fetch();
 	}
 
 	public function check()
 	{
-		return !is_null($this->id());
+		try {
+			return !is_null($this->id());
+		} catch (\Throwable $e) {
+			return false;
+		}
 	}
 
 	public function id()
 	{
 		return intval(data_get($this->jwt(), 'sub.id'));
-	}
-
-
-	/**
-	 * Get the token for the current request.
-	 *
-	 * @return string
-	 */
-	public function getTokenForRequest()
-	{
-		$header = $this->request->header('Authorization', '');
-
-		if (Str::startsWith($header, 'JWT ')) {
-			return Str::substr($header, 4);
-		}
-
-		return false;
 	}
 
 	/**
@@ -82,12 +68,8 @@ class JwtGuard implements Guard
 	 */
 	public function validate(array $credentials = [])
 	{
-		if (empty($credentials['jwt'])) {
-			return false;
-		}
-
 		try {
-			$decodedJWT = JWT::decode($this->getTokenForRequest(), env('JWT_SECRET'), ['HS256']);
+			$decodedJWT = $this->jwt();
 		} catch (Exception $e) {
 			return false;
 		}

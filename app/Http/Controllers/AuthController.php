@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AccessToken;
 use Validator;
 use App\User;
 use Firebase\JWT\JWT;
@@ -13,55 +14,26 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 class AuthController extends BaseController
 {
 	/**
-	 * The request instance.
-	 *
-	 * @var \Illuminate\Http\Request
-	 */
-	private $request;
-
-	/**
-	 * Create a new controller instance.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return void
-	 */
-	public function __construct(Request $request) {
-		$this->request = $request;
-	}
-
-	/**
-	 * Create a new token.
-	 *
-	 * @param  \App\User   $user
-	 * @return string
-	 */
-	protected function jwt(User $user) {
-		$payload = [
-			'iss' => "lumen-jwt", // Issuer of the token
-			'sub' => $user->only(['id', 'email']), // Subject of the token
-			'iat' => time(), // Time when JWT was issued.
-			'exp' => time() + 60*60 // Expiration time
-		];
-
-		// As you can see we are passing `JWT_SECRET` as the second parameter that will
-		// be used to decode the token in the future.
-		return JWT::encode($payload, env('JWT_SECRET'));
-	}
-
-	/**
 	 * Authenticate a user and return the token if the provided credentials are correct.
 	 *
-	 * @param  \App\User   $user
+	 * @param Request     $request
+	 * @param AccessToken $accessToken
+	 *
 	 * @return mixed
+	 * @throws \Illuminate\Validation\ValidationException
 	 */
-	public function authenticate(User $user) {
-		$this->validate($this->request, [
-			'email'     => 'required|email',
-			'password'  => 'required'
+	public function authenticate(Request $request, AccessToken $accessToken)
+	{
+		$this->validate($request, [
+			'email' => 'required|email',
+			'password' => 'required'
 		]);
 
 		// Find the user by email
-		$user = User::where('email', $this->request->input('email'))->first();
+		/** @var \App\User $user */
+		$user = User::query()
+			->where('email', $request->input('email'))
+			->first();
 
 		if (!$user) {
 			// You wil probably have some sort of helpers or whatever
@@ -74,9 +46,11 @@ class AuthController extends BaseController
 		}
 
 		// Verify the password and generate the token
-		if (Hash::check($this->request->input('password'), $user->password)) {
+		if (Hash::check($request->input('password'), $user->password)) {
 			return response()->json([
-				'token' => $this->jwt($user)
+				'token' => $accessToken->generate(
+					$user->only(['id', 'email'])
+				)
 			], 200);
 		}
 

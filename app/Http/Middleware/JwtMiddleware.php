@@ -2,12 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Auth\JwtGuard;
 use Closure;
 use Exception;
-use App\User;
-use Firebase\JWT\JWT;
 use Firebase\JWT\ExpiredException;
-use Illuminate\Support\Str;
 
 class JwtMiddleware
 {
@@ -21,7 +19,16 @@ class JwtMiddleware
 	public function handle($request, Closure $next, $guard = null)
 	{
 		try {
-			auth()->guard($guard ?: 'api')->check();
+			$auth = auth()->guard($guard ?: 'api');
+			if ($auth instanceof JwtGuard) {
+				$auth->jwt();
+			} else {
+				if ($auth->guest()) {
+					return response()->json([
+						'error' => 'Access Denied'
+					], 401);
+				}
+			}
 		} catch (ExpiredException $e) {
 			return response()->json([
 				'error' => 'Provided token is expired.'
