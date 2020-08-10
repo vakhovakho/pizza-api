@@ -63,6 +63,7 @@ class CartRepository
 			if ($fresh->match($item)) {
 				$item->addAmount($fresh->amount);
 				$fresh = null;
+				break;
 			}
 		}
 		if (!is_null($fresh)) {

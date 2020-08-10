@@ -12,28 +12,36 @@ class CartController extends Controller
 {
 	public function index()
 	{
-		$items = [];
+		$products = [];
 		/** @var CartItem[] $cartItems */
 		$cartItems = Cart::all();
+		$total = 0;
 		foreach ($cartItems as $cartItem) {
 			if ($cartItem->empty() || is_null($product = Product::query()->find($cartItem->id))) {
-				Cart::remove($cartItem->id, $cartItem->size);
+				Cart::remove($cartItem->id, $cartItem->selectedSize);
 				continue;
 			}
 
-			$items[] = [
+			$total += $product->prices[$cartItem->selectedSize] * $cartItem->amount;
+
+			$products[] = [
 				'product' => $product->toArray(),
-				'size' => $cartItem->size,
+				'selectedSize' => $cartItem->selectedSize,
 				'amount' => $cartItem->amount
 			];
 		}
 
-		return response()->json(['data' => $items], 200);
+		$data = [
+			'items' => $products,
+			'total' => round($total, 2)
+		];
+
+		return response()->json(['data' => $data], 200);
 	}
 
 	public function add(Request $request)
 	{
-		$request->validate([
+		$this->validate($request, [
 			'id' => 'required',
 			'size' => [
 				'required',

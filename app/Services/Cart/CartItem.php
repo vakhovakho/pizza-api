@@ -5,7 +5,7 @@ namespace App\Services\Cart;
 class CartItem
 {
 	public $id;
-	public $size;
+	public $selectedSize;
 	public $amount;
 
 	public function __construct($id, $size, $amount = null)
@@ -15,8 +15,8 @@ class CartItem
 			throw new \InvalidArgumentException('{id} must be positive integer');
 		}
 
-		$this->size = strtolower($size);
-		if (!in_array($this->size, ['small', 'medium', 'large'])) {
+		$this->selectedSize = strtolower($size);
+		if (!in_array($this->selectedSize, ['small', 'medium', 'large'])) {
 			throw new \InvalidArgumentException('{size} must be one of small, medium or large');
 		}
 
@@ -28,7 +28,7 @@ class CartItem
 
 	public function getIdentifier()
 	{
-		return $this->id . '-' . $this->size;
+		return $this->id . '-' . $this->selectedSize;
 	}
 
 	public function addAmount($amount = 1)

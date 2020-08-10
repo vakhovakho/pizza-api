@@ -31,6 +31,10 @@ class Product extends Model
 		'price3' => 'float',
 	];
 
+	protected $hidden = [
+		'price1', 'price2', 'price3'
+	];
+
 	public function getPricesAttribute() {
 		return [
 			'small' => $this->price1,

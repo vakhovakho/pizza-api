@@ -17,8 +17,6 @@ class ProductController extends Controller
     }
 
     public function index() {
-    	return Product::all()->each(function(Product $product){
-    		$product->setHidden($product->getHidden() + ['price1', 'price2', 'price3']);
-		});
+    	return Product::all();
 	}
 }

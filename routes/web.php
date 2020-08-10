@@ -26,10 +26,15 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 		$router->get('/orders', 'OrderController@index');
 	});
 
-
-
+	// Authorization routes
 	$router->post('auth/register', 'AuthController@register');
 	$router->post('auth/login', 'AuthController@authenticate');
+
+	// Cart routes
+	$router->get('/cart', 'CartController@index');
+	$router->post('/cart/add', 'CartController@add');
+	$router->post('/cart/remove', 'CartController@remove');
+	$router->post('/cart/substract', 'CartController@sub');
 });
 
 

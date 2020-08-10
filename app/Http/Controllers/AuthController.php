@@ -56,13 +56,16 @@ class AuthController extends BaseController
 
 	public function register(RegisterRequest $request) {
 		/** @var User $user */
-		$user = User::query()->create([
+		$user = new User([
 			'name' => $request->name,
 			'number' => $request->number,
 			'address' => $request->address,
 			'email' => $request->email,
-			'password' => Hash::make($request->name)
 		]);
+
+		$user->password = Hash::make($request->password);
+
+		$user->saveOrFail();
 
 		return response()->json([
 			'token' => $this->generateJWT($user)
@@ -71,6 +74,6 @@ class AuthController extends BaseController
 
 	protected function generateJWT(User $user): string {
 		return app('access-token')
-			->generate($user->only(['id', 'email']));
+			->generate($user->only(['id', 'name', 'email', 'address', 'number']));
 	}
 }

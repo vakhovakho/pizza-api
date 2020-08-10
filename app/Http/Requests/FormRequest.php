@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use \Laravel\Lumen\Http\Request;
+
 /**
  * @property-read string name
  * @property-read string number
@@ -9,7 +11,7 @@ namespace App\Http\Requests;
  * @property-read string email
  * @property-read string password
  */
-class RegisterRequest extends FormRequest
+abstract class FormRequest extends Request
 {
 	public function rules()
 	{
@@ -18,7 +20,7 @@ class RegisterRequest extends FormRequest
 			'number' => 'required|max:255',
 			'address' => 'required|max:255',
 			'email' => 'required|email|unique:users',
-			'password' => 'required|min:6|max:255'
+			'password' => 'required|max:255'
 		];
 	}
 }
