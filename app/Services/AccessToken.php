@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 class AccessToken
@@ -24,7 +25,7 @@ class AccessToken
 			'iss' => "access",
 			'sub' => $sub,
 			'iat' => time(),
-			'exp' => time() + 60 * 60 * 24
+			'exp' => Carbon::now()->addDay()->getTimestamp()
 		];
 
 		return JWT::encode($payload, env('JWT_SECRET'));

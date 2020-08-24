@@ -56,7 +56,7 @@ class CartController extends Controller
 
 	public function remove(Request $request)
 	{
-		$request->validate([
+		$this->validate($request, [
 			'id' => 'required',
 			'size' => [
 				'required',
@@ -71,7 +71,7 @@ class CartController extends Controller
 
 	public function sub(Request $request)
 	{
-		$request->validate([
+		$this->validate($request, [
 			'id' => 'required',
 			'size' => [
 				'required',

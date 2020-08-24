@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class GuestToken
 {
@@ -28,7 +29,7 @@ class GuestToken
 			'iss' => "guest",
 			'sub' => empty($sub) ? sha1($this->request->getClientIp() . time() . rand(1000000, 9999999)) : $sub,
 			'iat' => time(),
-			'exp' => time() + 60 * 60
+			'exp' => Carbon::now()->addHours(2)->getTimestamp()
 		];
 
 		return JWT::encode($payload, env('JWT_GUEST_SECRET'));
