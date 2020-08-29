@@ -59,6 +59,7 @@ $factory->define(\App\Models\OrderProduct::class, function (Faker $faker) {
 		'name' => "pizza " . $faker->word,
 		'description' => $faker->sentence,
 		'size' => $sizes[random_int(0, 2)],
-		'price' => $price
+		'price' => $price,
+		'amount' => random_int(1, 5)
 	];
 });

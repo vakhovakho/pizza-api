@@ -66,7 +66,8 @@ class OrderController extends Controller
 					'name' => $product->name,
 					'description' => $product->description,
 					'size' => $cartItem->selectedSize,
-					'price' => $price
+					'price' => $price,
+					'amount' => $cartItem->amount
 				]);
 			}
 

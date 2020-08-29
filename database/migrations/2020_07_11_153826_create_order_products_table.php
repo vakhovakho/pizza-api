@@ -20,6 +20,7 @@ class CreateOrderProductsTable extends Migration
 			$table->text('description');
 			$table->enum('size', ['small', 'medium', 'large']);
 			$table->decimal('price', 4, 2);
+			$table->integer('amount');
             $table->timestamps();
 
             $table->foreign('order_id')->references('id')->on('orders');

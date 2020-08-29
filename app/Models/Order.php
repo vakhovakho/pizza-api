@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -31,6 +32,10 @@ class Order extends Model
 		'total'
 	];
 
+	protected $appends = [
+		'date'
+	];
+
 	protected $casts = [
 		'total' => 'float'
 	];
@@ -43,5 +48,9 @@ class Order extends Model
 	public function products()
 	{
 		return $this->hasMany(OrderProduct::class);
+	}
+
+	public function getDateAttribute(){
+		return $this->created_at->format('m/d/Y');
 	}
 }
