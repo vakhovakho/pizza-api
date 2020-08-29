@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
+use App\Services\Cart\Cart;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,7 +14,7 @@ class AuthController extends BaseController
 	/**
 	 * Authenticate a user and return the token if the provided credentials are correct.
 	 *
-	 * @param Request     $request
+	 * @param Request $request
 	 *
 	 * @return mixed
 	 * @throws \Illuminate\Validation\ValidationException
@@ -54,7 +55,8 @@ class AuthController extends BaseController
 		], 400);
 	}
 
-	public function register(RegisterRequest $request) {
+	public function register(RegisterRequest $request)
+	{
 		/** @var User $user */
 		$user = new User([
 			'name' => $request->name,
@@ -72,7 +74,8 @@ class AuthController extends BaseController
 		], 200);
 	}
 
-	protected function generateJWT(User $user): string {
+	protected function generateJWT(User $user): string
+	{
 		return app('access-token')
 			->generate($user->only(['id', 'name', 'email', 'address', 'number']));
 	}

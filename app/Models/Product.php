@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @property string name
+ * @property string description
+ * @property string image
  * @property float price1
  * @property float price2
  * @property float price3

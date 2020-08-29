@@ -23,7 +23,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->get('/products', 'ProductController@index');
 
 	$router->group(['middleware' => 'jwt.auth'], function() use ($router) {
+		// Order routes
 		$router->get('/orders', 'OrderController@index');
+		$router->post('/orders/create', 'OrderController@create');
 	});
 
 	// Authorization routes
@@ -35,6 +37,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->post('/cart/add', 'CartController@add');
 	$router->post('/cart/remove', 'CartController@remove');
 	$router->post('/cart/substract', 'CartController@sub');
+
+
 });
 
 

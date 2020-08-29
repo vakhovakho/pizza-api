@@ -42,9 +42,11 @@ $factory->define(\App\Models\Order::class, function (Faker $faker) {
 	$total = $faker->randomFloat(2, 30, 150);
 	return [
 		'user_id' => User::query()->find(2),
+		'name' => $faker->name,
 		'email' => $faker->email,
 		'address' => $faker->address,
 		'number' => $faker->phoneNumber,
+		'comment' => $faker->sentence,
 		'total' => $total
 	];
 });
