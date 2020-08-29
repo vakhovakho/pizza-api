@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @method static void add(int $id, string $size, int $amount = null)
  * @method static void remove(int $id, string $size, int $amount = null): void
+ * @method static void delete(): void
  * @method static \App\Services\CartItem[] all()
  *
  * @see \App\Services\CartRepository

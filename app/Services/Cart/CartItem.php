@@ -33,7 +33,7 @@ class CartItem
 
 	public function addAmount($amount = 1)
 	{
-		return $this->amount += $amount;
+		return $this->amount = min($this->amount + $amount, 99);
 	}
 
 	public function subAmount($amount = 1)

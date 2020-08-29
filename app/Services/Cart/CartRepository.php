@@ -82,7 +82,7 @@ class CartRepository
 	 */
 	public function remove($id, $size, $amount = null)
 	{
-		$target = new CartItem($id, $size, $amount ?? INF);
+		$target = new CartItem($id, $size, $amount ?? PHP_INT_MAX);
 		$items = $this->all();
 
 		foreach ($items as $item) {
@@ -100,5 +100,10 @@ class CartRepository
 	public function all()
 	{
 		return (array)$this->repository->get($this->key, []);
+	}
+
+	public function delete()
+	{
+		$this->repository->set($this->key, []);
 	}
 }
