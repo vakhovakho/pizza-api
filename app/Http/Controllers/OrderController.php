@@ -24,6 +24,7 @@ class OrderController extends Controller
 	{
 		return Order::query()
 			->where('user_id', auth()->id())
+			->latest()
 			->with('products')
 			->get();
 	}
